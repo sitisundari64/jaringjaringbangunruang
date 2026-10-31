@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4338ca">
+<title>TKA Matematika IX | Eksplorasi Jaring-Jaring Bangun Ruang</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<script>
+tailwind.config = {
+ theme: {
+  extend: {
+   fontFamily: {
+    nunito: ['Nunito','sans-serif'],
+    fredoka: ['Fredoka','sans-serif']
+   },
+   colors: {
+    primary:'#4338ca',
+    secondary:'#06b6d4',
+    pop:'#f97316'
+   }
+  }
+ }
+}
+</script>
+
+<style>
+*{box-sizing:border-box}
+body{
+ font-family:'Nunito',sans-serif;
+ background:#f5f6ff;
+ color:#25304a;
+ margin:0;
+}
+h1,h2,h3,.brand{font-family:'Fredoka',sans-serif}
+button{transition:all .2s ease}
+button:active{transform:scale(.96)}
+.hidden-section{display:none!important}
+.section{animation:fade .35s ease}
+@keyframes fade{
+ from{opacity:0;transform:translateY(10px)}
+ to{opacity:1;transform:translateY(0)}
+}
+.card{
+ background:white;
+ border:1px solid #e8eafd;
+ border-radius:22px;
+ box-shadow:0 5px 18px rgba(60,65,130,.06);
+}
+.menu-card{
+ background:white;
+ border:2px solid transparent;
+ border-radius:22px;
+ padding:20px;
+ cursor:pointer;
+ transition:.25s;
+}
+.menu-card:hover{
+ transform:translateY(-5px);
+ border-color:#a5b4fc;
+ box-shadow:0 12px 25px #4338ca17;
+}
+.btn{
+ border-radius:14px;
+ padding:11px 19px;
+ font-weight:800;
+}
+.btn-primary{
+ background:#4338ca;
+ color:white;
+ box-shadow:0 4px 0 #30269c;
+}
+.btn-primary:hover{background:#3730a3}
+.btn-light{background:#eef2ff;color:#4338ca}
+.btn-light:hover{background:#e0e7ff}
+.nav-item{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ padding:12px 15px;
+ border-radius:13px;
+ width:100%;
+ text-align:left;
+ font-weight:800;
+ color:#64748b;
+}
+.nav-item:hover,.nav-item.active{
+ background:#eef2ff;
+ color:#4338ca;
+}
+.tab{
+ padding:10px 17px;
+ border-radius:12px;
+ background:#eef2ff;
+ color:#64748b;
+ font-weight:800;
+ white-space:nowrap;
+}
+.tab.active{background:#4338ca;color:white}
+.progress{
+ height:9px;
+ border-radius:20px;
+ background:#e2e8f0;
+ overflow:hidden;
+}
+.progress-fill{
+ height:100%;
+ background:linear-gradient(90deg,#6366f1,#06b6d4);
+ transition:width .3s;
+}
+.flip-card{
+ perspective:1000px;
+ min-height:220px;
+ cursor:pointer;
+}
+.flip-inner{
+ position:relative;
+ width:100%;
+ min-height:220px;
+ transition:transform .6s;
+ transform-style:preserve-3d;
+}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{
+ position:absolute;
+ inset:0;
+ backface-visibility:hidden;
+ border-radius:22px;
+ padding:25px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-direction:column;
+ text-align:center;
+}
+.flip-back{transform:rotateY(180deg)}
+.option{
+ width:100%;
+ padding:14px;
+ border:2px solid #e2e8f0;
+ border-radius:13px;
+ text-align:left;
+ margin-top:10px;
+ font-weight:800;
+ background:white;
+}
+.option:hover{border-color:#818cf8;background:#f5f3ff}
+.option.correct{background:#dcfce7;border-color:#22c55e;color:#166534}
+.option.wrong{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+.option:disabled{cursor:default}
+.sticky{
+ background:#fff4bf;
+ border-radius:8px 8px 15px 8px;
+ padding:17px;
+ box-shadow:3px 5px 12px #64748b20;
+ transform:rotate(-1deg);
+ min-height:130px;
+ overflow-wrap:anywhere;
+}
+.sticky:nth-child(even){background:#dbeafe;transform:rotate(1deg)}
+.sticky:nth-child(3n){background:#fce7f3;transform:rotate(-2deg)}
+.geometry{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ min-height:180px;
+ background:#f8faff;
+ border-radius:18px;
+ overflow:hidden;
+}
+.geometry svg{max-width:100%;height:auto}
+.net-face{
+ fill:#c7d2fe;
+ stroke:#4338ca;
+ stroke-width:2;
+ cursor:pointer;
+ transition:.2s;
+}
+.net-face:hover{fill:#818cf8}
+.net-face.selected{fill:#22c55e}
+.badge{
+ padding:5px 11px;
+ border-radius:20px;
+ font-size:12px;
+ font-weight:900;
+}
+@media(max-width:768px){
+ .sidebar{display:none}
+ .mobile-nav{display:flex}
+ .main-content{padding:15px}
+ .hero-title{font-size:32px}
+}
+@media(min-width:769px){
+ .mobile-nav{display:none}
+}
+@media print{
+ body *{visibility:hidden}
+ #certificate,#certificate *{visibility:visible}
+ #certificate{
+ position:absolute;left:0;top:0;width:100%;
+ }
+ .no-print{display:none!important}
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="bg-white border-b border-indigo-100 sticky top-0 z-50">
+ <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
+  <div class="flex items-center gap-3">
+   <div class="bg-indigo-600 text-white rounded-xl w-11 h-11 flex items-center justify-center text-xl">
+    <i class="fa-solid fa-shapes"></i>
+   </div>
+   <div>
+    <div class="brand text-lg font-bold text-indigo-800">MATH EXPLORER</div>
+    <div class="text-xs text-slate-500 font-bold">TKA MATEMATIKA • KELAS IX</div>
+   </div>
+  </div>
+
+  <div class="hidden md:block text-center">
+   <div class="font-extrabold text-slate-700 text-sm">Jaring-Jaring Bangun Ruang</div>
+   <div class="text-xs text-slate-400">SMP • Pembelajaran Interaktif</div>
+  </div>
+
+  <div class="flex gap-2">
+   <button onclick="showPage('home')" class="btn btn-light text-sm">
+    <i class="fa-solid fa-house"></i>
+    <span class="hidden sm:inline"> Beranda</span>
+   </button>
+   <button onclick="toggleAudio()" id="audioBtn" class="btn bg-emerald-100 text-emerald-700 text-sm">
+    <i class="fa-solid fa-volume-high"></i> Audio ON
+   </button>
+  </div>
+ </div>
+</header>
+
+<div class="max-w-7xl mx-auto flex gap-5 p-4">
+
+<!-- SIDEBAR -->
+<aside class="sidebar w-64 shrink-0">
+ <div class="card p-4 sticky top-24">
+  <div class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Menu Pembelajaran</div>
+
+  <nav class="space-y-1">
+   <button class="nav-item active" data-page="home" onclick="showPage('home')"><i class="fa-solid fa-house w-5"></i> Beranda</button>
+   <button class="nav-item" data-page="tujuan" onclick="showPage('tujuan')"><i class="fa-solid fa-bullseye w-5"></i> Tujuan Belajar</button>
+   <button class="nav-item" data-page="pemantik" onclick="showPage('pemantik')"><i class="fa-solid fa-lightbulb w-5"></i> Pertanyaan Pemantik</button>
+   <button class="nav-item" data-page="materi" onclick="showPage('materi')"><i class="fa-solid fa-book-open w-5"></i> Materi Interaktif</button>
+   <button class="nav-item" data-page="simulasi" onclick="showPage('simulasi')"><i class="fa-solid fa-cube w-5"></i> Simulasi</button>
+   <button class="nav-item" data-page="kuis" onclick="showPage('kuis')"><i class="fa-solid fa-circle-question w-5"></i> Kuis TKA</button>
+   <button class="nav-item" data-page="games" onclick="showPage('games')"><i class="fa-solid fa-gamepad w-5"></i> Games</button>
+   <button class="nav-item" data-page="kesimpulan" onclick="showPage('kesimpulan')"><i class="fa-solid fa-check-double w-5"></i> Kesimpulan</button>
+   <button class="nav-item" data-page="refleksi" onclick="showPage('refleksi')"><i class="fa-solid fa-note-sticky w-5"></i> Papan Refleksi</button>
+  </nav>
+
+  <div class="mt-5 bg-indigo-50 rounded-2xl p-4">
+   <div class="text-indigo-800 font-black text-sm">🌟 Semangat Belajar!</div>
+   <p class="text-xs text-slate-500 mt-1">Matematika menjadi lebih mudah ketika kita berani bereksplorasi.</p>
+  </div>
+ </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main-content flex-1 min-w-0">
+
+<!-- HOME -->
+<section id="home" class="section">
+ <div class="rounded-3xl overflow-hidden bg-gradient-to-br from-indigo-700 via-indigo-600 to-cyan-600 text-white p-7 md:p-10 relative">
+  <div class="absolute right-0 top-0 opacity-10 text-9xl">
+   <i class="fa-solid fa-cubes"></i>
+  </div>
+
+  <div class="relative z-10 grid md:grid-cols-2 gap-6 items-center">
+   <div>
+    <span class="badge bg-white/20 text-white">🚀 MATH EXPLORER • KELAS IX</span>
+    <h1 class="hero-title text-4xl md:text-5xl font-bold mt-5 leading-tight">
+     Jelajahi Dunia<br>Bangun Ruang!
+    </h1>
+    <p class="text-indigo-100 mt-4 leading-relaxed">
+     Yuk, pelajari bagaimana sebuah bangun datar dapat dilipat menjadi bangun ruang. Temukan rahasia jaring-jaring prisma, tabung, limas, dan kerucut!
+    </p>
+    <button onclick="showPage('materi')" class="mt-7 bg-white text-indigo-700 px-7 py-3 rounded-2xl font-black shadow-lg hover:bg-indigo-50">
+     Mulai Belajar <i class="fa-solid fa-arrow-right ml-2"></i>
+    </button>
+   </div>
+
+   <div class="flex justify-center">
+    <div class="bg-white/10 rounded-3xl p-3 backdrop-blur-sm">
+     <img
+      src="https://i.ibb.co.com/hFJHmgp2/Desain-tanpa-judul-9.png"
+      alt="Ilustrasi pembelajaran matematika"
+      class="w-full max-w-sm rounded-2xl object-contain"
+      onerror="this.style.display='none';document.getElementById('homeFallback').style.display='block'">
+     <div id="homeFallback" style="display:none" class="text-center text-8xl p-8">📐📦🔺</div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-5">
+  <div class="card p-4 text-center">
+   <div class="text-3xl">📦</div>
+   <div class="font-black text-indigo-700 mt-2">Prisma</div>
+   <div class="text-xs text-slate-400">Sisi tegak persegi panjang</div>
+  </div>
+  <div class="card p-4 text-center">
+   <div class="text-3xl">🥫</div>
+   <div class="font-black text-cyan-700 mt-2">Tabung</div>
+   <div class="text-xs text-slate-400">2 lingkaran + 1 persegi panjang</div>
+  </div>
+  <div class="card p-4 text-center">
+   <div class="text-3xl">🔺</div>
+   <div class="font-black text-orange-600 mt-2">Limas</div>
+   <div class="text-xs text-slate-400">Alas + sisi segitiga</div>
+  </div>
+  <div class="card p-4 text-center">
+   <div class="text-3xl">🍦</div>
+   <div class="font-black text-pink-600 mt-2">Kerucut</div>
+   <div class="text-xs text-slate-400">Lingkaran + juring</div>
+  </div>
+ </div>
+
+ <div class="mt-7">
+  <h2 class="text-2xl font-bold text-slate-800 mb-4">🎯 Pilih Petualangan Belajarmu</h2>
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+   <div class="menu-card" onclick="showPage('tujuan')"><div class="text-3xl">🎯</div><b>Tujuan Belajar</b><p class="text-xs text-slate-400 mt-1">Kenali target kompetensi.</p></div>
+   <div class="menu-card" onclick="showPage('pemantik')"><div class="text-3xl">💡</div><b>Pertanyaan Pemantik</b><p class="text-xs text-slate-400 mt-1">Mulai dengan rasa ingin tahu.</p></div>
+   <div class="menu-card" onclick="showPage('materi')"><div class="text-3xl">📚</div><b>Materi Interaktif</b><p class="text-xs text-slate-400 mt-1">Pelajari empat bangun ruang.</p></div>
+   <div class="menu-card" onclick="showPage('simulasi')"><div class="text-3xl">🧩</div><b>Simulasi</b><p class="text-xs text-slate-400 mt-1">Eksperimen jaring-jaring.</p></div>
+   <div class="menu-card" onclick="showPage('kuis')"><div class="text-3xl">🏆</div><b>Kuis TKA</b><p class="text-xs text-slate-400 mt-1">Uji kemampuanmu.</p></div>
+   <div class="menu-card" onclick="showPage('games')"><div class="text-3xl">🎮</div><b>Games</b><p class="text-xs text-slate-400 mt-1">Belajar sambil bermain.</p></div>
+   <div class="menu-card" onclick="showPage('kesimpulan')"><div class="text-3xl">⭐</div><b>Kesimpulan</b><p class="text-xs text-slate-400 mt-1">Rangkum pengetahuanmu.</p></div>
+   <div class="menu-card" onclick="showPage('refleksi')"><div class="text-3xl">📝</div><b>Refleksi</b><p class="text-xs text-slate-400 mt-1">Bagikan pengalaman belajar.</p></div>
+  </div>
+ </div>
+
+ <div class="card p-5 mt-6">
+  <h3 class="font-bold text-lg">📌 Petunjuk Penggunaan</h3>
+  <div class="grid md:grid-cols-3 gap-4 mt-4 text-sm">
+   <div><b class="text-indigo-700">01. Jelajahi</b><p class="text-slate-500 mt-1">Buka setiap menu pembelajaran secara berurutan.</p></div>
+   <div><b class="text-indigo-700">02. Eksperimen</b><p class="text-slate-500 mt-1">Gunakan simulasi untuk memahami posisi sisi bangun.</p></div>
+   <div><b class="text-indigo-700">03. Tantang Diri</b><p class="text-slate-500 mt-1">Selesaikan kuis dan permainan untuk memperoleh skor.</p></div>
+  </div>
+ </div>
+</section>
+
+<!-- TUJUAN -->
+<section id="tujuan" class="section hidden-section">
+ <div class="mb-6">
+  <span class="badge bg-indigo-100 text-indigo-700">01 • TARGET PEMBELAJARAN</span>
+  <h1 class="text-3xl font-bold mt-3">Tujuan Pembelajaran 🎯</h1>
+  <p class="text-slate-500 mt-2">Setelah mengikuti pembelajaran ini, kamu diharapkan mampu:</p>
+ </div>
+
+ <div class="grid md:grid-cols-2 gap-4">
+  <div class="card p-5 border-l-4 border-indigo-500">
+   <div class="text-3xl">🧠</div>
+   <h3 class="font-bold text-lg mt-3">Memahami Konsep</h3>
+   <p class="text-slate-500 text-sm mt-2">Mengidentifikasi karakteristik jaring-jaring prisma, tabung, limas, dan kerucut serta hubungan antara sisi-sisinya.</p>
+  </div>
+  <div class="card p-5 border-l-4 border-cyan-500">
+   <div class="text-3xl">🔍</div>
+   <h3 class="font-bold text-lg mt-3">Menginterpretasikan Posisi Sisi</h3>
+   <p class="text-slate-500 text-sm mt-2">Menentukan pasangan sisi, alas, tutup, dan sisi tegak berdasarkan susunan jaring-jaring prisma.</p>
+  </div>
+  <div class="card p-5 border-l-4 border-orange-500">
+   <div class="text-3xl">⚙️</div>
+   <h3 class="font-bold text-lg mt-3">Mengaplikasikan Konsep</h3>
+   <p class="text-slate-500 text-sm mt-2">Menentukan bentuk dan posisi setiap sisi ketika jaring-jaring dilipat menjadi bangun ruang.</p>
+  </div>
+  <div class="card p-5 border-l-4 border-pink-500">
+   <div class="text-3xl">🚀</div>
+   <h3 class="font-bold text-lg mt-3">Bernalar Tingkat Tinggi</h3>
+   <p class="text-slate-500 text-sm mt-2">Menganalisis kemungkinan jaring-jaring, mengidentifikasi kesalahan susunan sisi, dan memecahkan permasalahan kontekstual.</p>
+  </div>
+ </div>
+
+ <div class="card p-6 mt-5 bg-indigo-50 border-none">
+  <h3 class="font-bold text-indigo-800">🌍 Mengapa Kita Perlu Belajar Ini?</h3>
+  <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+   Pernah melihat kemasan makanan, kotak hadiah, tenda, atau kardus? Semua itu berkaitan dengan bangun ruang. Dengan memahami jaring-jaring, kita dapat merancang kemasan yang tepat, hemat bahan, dan memiliki bentuk yang sesuai.
+  </p>
+ </div>
+</section>
+
+<!-- PEMANTIK -->
+<section id="pemantik" class="section hidden-section">
+ <span class="badge bg-orange-100 text-orange-700">02 • AKTIVASI PENGETAHUAN</span>
+ <h1 class="text-3xl font-bold mt-3">Pertanyaan Pemantik 💡</h1>
+ <p class="text-slate-500 mt-2 mb-6">Tenangkan pikiran, amati ilustrasi, lalu temukan jawabannya.</p>
+
+ <div class="card p-5 mb-5">
+  <h3 class="font-bold text-lg">🧘 Mindful Moment</h3>
+  <p class="text-slate-500 text-sm mt-2">Tarik napas perlahan selama 4 hitungan, tahan 2 hitungan, kemudian keluarkan perlahan. Bayangkan sebuah kardus yang sedang dibuka.</p>
+  <button onclick="mindful()" class="btn btn-primary mt-4">Mulai 10 Detik</button>
+  <div id="mindfulText" class="font-bold text-indigo-700 mt-3"></div>
+ </div>
+
+ <div class="grid md:grid-cols-2 gap-4">
+  <div class="flip-card" onclick="this.classList.toggle('flipped')">
+   <div class="flip-inner">
+    <div class="flip-front bg-indigo-100">
+     <div class="text-5xl">📦</div>
+     <h3 class="font-bold text-xl mt-4">Pertanyaan 1</h3>
+     <p class="mt-2 text-sm">Klik kartu untuk membuka pertanyaan!</p>
+    </div>
+    <div class="flip-back bg-indigo-700 text-white">
+     <h3 class="text-xl font-bold">Jika sebuah kardus berbentuk prisma segitiga dibuka seluruhnya, berapa sisi yang akan terlihat?</h3>
+     <p class="text-sm mt-4 text-indigo-100">Pikirkan alas, tutup, dan sisi tegaknya.</p>
+    </div>
+   </div>
+  </div>
+
+  <div class="flip-card" onclick="this.classList.toggle('flipped')">
+   <div class="flip-inner">
+    <div class="flip-front bg-orange-100">
+     <div class="text-5xl">🧩</div>
+     <h3 class="font-bold text-xl mt-4">Pertanyaan 2</h3>
+     <p class="mt-2 text-sm">Klik kartu untuk membuka pertanyaan!</p>
+    </div>
+    <div class="flip-back bg-orange-600 text-white">
+     <h3 class="text-xl font-bold">Mengapa dua segitiga yang sama pada jaring-jaring prisma harus berada pada posisi yang tepat?</h3>
+     <p class="text-sm mt-4 text-orange-100">Apa yang terjadi jika posisi kedua segitiga salah?</p>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <div class="card p-5 mt-5">
+  <h3 class="font-bold">🔎 Fenomena di Sekitar Kita</h3>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 text-center">
+   <div class="bg-slate-50 p-3 rounded-xl"><div class="text-4xl">🥫</div><p class="font-bold text-sm mt-2">Kaleng</p></div>
+   <div class="bg-slate-50 p-3 rounded-xl"><div class="text-4xl">📦</div><p class="font-bold text-sm mt-2">Kemasan</p></div>
+   <div class="bg-slate-50 p-3 rounded-xl"><div class="text-4xl">⛺</div><p class="font-bold text-sm mt-2">Tenda</p></div>
+   <div class="bg-slate-50 p-3 rounded-xl"><div class="text-4xl">🍦</div><p class="font-bold text-sm mt-2">Cone Es Krim</p></div>
+  </div>
+ </div>
+</section>
+
+<!-- MATERI -->
+<section id="materi" class="section hidden-section">
+ <span class="badge bg-cyan-100 text-cyan-700">03 • EKSPLORASI KONSEP</span>
+ <h1 class="text-3xl font-bold mt-3">Materi Interaktif 📚</h1>
+ <p class="text-slate-500 mt-2">Pilih bangun ruang yang ingin kamu pelajari.</p>
+
+ <div class="flex gap-2 overflow-x-auto py-5">
+  <button class="tab active" onclick="materialTab('prisma',this)">📦 Prisma</button>
+  <button class="tab" onclick="materialTab('tabung',this)">🥫 Tabung</button>
+  <button class="tab" onclick="materialTab('limas',this)">🔺 Limas</button>
+  <button class="tab" onclick="materialTab('kerucut',this)">🍦 Kerucut</button>
+ </div>
+
+ <div id="materialContent"></div>
+</section>
+
+<!-- SIMULASI -->
+<section id="simulasi" class="section hidden-section">
+ <span class="badge bg-purple-100 text-purple-700">04 • LABORATORIUM VIRTUAL</span>
+ <h1 class="text-3xl font-bold mt-3">Simulasi Jaring-Jaring Prisma 🧩</h1>
+ <p class="text-slate-500 mt-2">Klik tombol untuk mengubah tampilan jaring-jaring dan mengamati hubungan sisi-sisinya.</p>
+
+ <div class="card p-5 mt-5">
+  <div class="flex flex-wrap justify-between items-center gap-3">
+   <h3 class="font-bold text-lg">Prisma Segitiga</h3>
+   <span class="badge bg-green-100 text-green-700">Eksperimen Interaktif</span>
+  </div>
+
+  <div class="geometry mt-4 p-3">
+   <svg id="netSVG" viewBox="0 0 500 300" width="100%" style="max-height:320px">
+    <!-- Tiga sisi tegak -->
+    <rect class="net-face" x="110" y="95" width="100" height="100" onclick="selectFace(1)"/>
+    <rect class="net-face" x="210" y="95" width="100" height="100" onclick="selectFace(2)"/>
+    <rect class="net-face" x="310" y="95" width="100" height="100" onclick="selectFace(3)"/>
+    <!-- Dua sisi segitiga -->
+    <polygon class="net-face" points="210,95 310,95 260,20" onclick="selectFace(4)"/>
+    <polygon class="net-face" points="210,195 310,195 260,270" onclick="selectFace(5)"/>
+    <g fill="#312e81" font-size="13" font-weight="bold" text-anchor="middle">
+     <text x="160" y="150">Sisi 1</text>
+     <text x="260" y="150">Sisi 2</text>
+     <text x="360" y="150">Sisi 3</text>
+     <text x="260" y="65">Alas A</text>
+     <text x="260" y="240">Alas B</text>
+    </g>
+   </svg>
+  </div>
+
+  <div class="flex flex-wrap justify-center gap-2 mt-4">
+   <button onclick="netMode('open')" class="btn btn-primary"><i class="fa-solid fa-expand"></i> Bentangkan</button>
+   <button onclick="netMode('fold')" class="btn btn-light"><i class="fa-solid fa-cube"></i> Lipat</button>
+   <button onclick="netMode('reset')" class="btn bg-orange-100 text-orange-700"><i class="fa-solid fa-rotate"></i> Reset</button>
+  </div>
+
+  <div id="simInfo" class="mt-5 bg-indigo-50 rounded-2xl p-4 text-sm text-indigo-900">
+   <b>Petunjuk:</b> Klik setiap sisi untuk mengenali bagian-bagiannya. Prisma segitiga mempunyai 5 sisi: 2 sisi segitiga dan 3 sisi persegi panjang.
+  </div>
+ </div>
+
+ <div class="grid md:grid-cols-2 gap-4 mt-5">
+  <div class="card p-5">
+   <h3 class="font-bold">🔬 Eksperimen Posisi Sisi</h3>
+   <p class="text-sm text-slate-500 mt-2">Pilih sisi untuk mengetahui perannya.</p>
+   <div class="grid grid-cols-5 gap-2 mt-4">
+    {PLACEHOLDER}
+   </div>
+   <div id="faceDetail" class="mt-4 text-sm bg-cyan-50 p-4 rounded-xl">Pilih salah satu sisi pada gambar.</div>
+  </div>
+
+  <div class="card p-5">
+   <h3 class="font-bold">🧠 Tantangan Penalaran</h3>
+   <p class="text-sm text-slate-500 mt-2">Jika prisma segitiga memiliki 5 sisi, berapa jumlah rusuk dan titik sudutnya?</p>
+   <div class="mt-4 space-y-2">
+    <button class="option" onclick="challenge(this,false)">A. 6 rusuk dan 5 titik sudut</button>
+    <button class="option" onclick="challenge(this,true)">B. 9 rusuk dan 6 titik sudut</button>
+    <button class="option" onclick="challenge(this,false)">C. 12 rusuk dan 8 titik sudut</button>
+   </div>
+   <div id="challengeFeedback" class="text-sm mt-3 font-bold"></div>
+  </div>
+ </div>
+</section>
+
+<!-- KUIS -->
+<section id="kuis" class="section hidden-section">
+ <span class="badge bg-yellow-100 text-yellow-800">05 • ASESMEN FORMATIF</span>
+ <h1 class="text-3xl font-bold mt-3">Kuis TKA Matematika 🏆</h1>
+ <p class="text-slate-500 mt-2">Pilih level tantangan dan raih skor terbaikmu.</p>
+
+ <div id="quizStart" class="card p-6 mt-5">
+  <h2 class="text-xl font-bold">Siap Menguji Kemampuan?</h2>
+  <label class="block text-sm font-bold mt-5 mb-2">Nama peserta untuk sertifikat</label>
+  <input id="studentName" class="w-full p-3 border-2 border-slate-200 rounded-xl focus:border-indigo-500 outline-none" placeholder="Masukkan nama lengkap..." maxlength="50">
+
+  <h3 class="font-bold mt-6 mb-3">Pilih Level</h3>
+  <div class="grid md:grid-cols-3 gap-3">
+   <button onclick="startQuiz('mudah')" class="card p-5 text-left hover:border-green-400 border-2">
+    <div class="text-3xl">🌱</div><b class="text-green-700 text-lg">Mudah</b><p class="text-xs text-slate-400 mt-2">Memahami konsep dasar dan mengenali sisi.</p>
+   </button>
+   <button onclick="startQuiz('sedang')" class="card p-5 text-left hover:border-yellow-400 border-2">
+    <div class="text-3xl">🔥</div><b class="text-yellow-700 text-lg">Sedang</b><p class="text-xs text-slate-400 mt-2">Mengaplikasikan dan menginterpretasikan.</p>
+   </button>
+   <button onclick="startQuiz('sulit')" class="card p-5 text-left hover:border-red-400 border-2">
+    <div class="text-3xl">🚀</div><b class="text-red-700 text-lg">Sulit</b><p class="text-xs text-slate-400 mt-2">Bernalar dan memecahkan masalah.</p>
+   </button>
+  </div>
+  <p class="text-xs text-slate-400 mt-4">Setiap level terdiri atas 10 soal pilihan ganda.</p>
+ </div>
+
+ <div id="quizPlay" class="card p-5 mt-5 hidden">
+  <div class="flex flex-wrap justify-between gap-3 items-center">
+   <div>
+    <span id="quizLevel" class="badge bg-indigo-100 text-indigo-700">LEVEL</span>
+    <p id="quizNumber" class="font-bold mt-2">Soal 1 dari 10</p>
+   </div>
+   <div class="flex gap-2">
+    <div class="bg-indigo-50 rounded-xl px-4 py-2 text-sm font-black">⭐ <span id="quizScore">0</span></div>
+    <button onclick="exitQuiz()" class="btn bg-red-100 text-red-700 text-sm">Keluar / Ganti Level</button>
+   </div>
+  </div>
+
+  <div class="progress mt-4"><div id="quizProgress" class="progress-fill" style="width:10%"></div></div>
+  <h3 id="questionText" class="text-xl font-bold mt-6 leading-relaxed"></h3>
+  <div id="questionOptions" class="mt-4"></div>
+  <div id="quizFeedback" class="hidden mt-5 rounded-xl p-4 text-sm"></div>
+  <button id="nextQuestion" onclick="nextQuiz()" class="btn btn-primary mt-5 hidden w-full">Soal Selanjutnya <i class="fa-solid fa-arrow-right ml-2"></i></button>
+ </div>
+
+ <div id="quizResult" class="card p-6 mt-5 hidden text-center">
+  <div class="text-6xl">🏆</div>
+  <h2 class="text-3xl font-bold mt-3">Hebat! Tantangan Selesai!</h2>
+  <p id="resultText" class="text-slate-500 mt-2"></p>
+  <div class="text-5xl font-black text-indigo-700 my-5"><span id="finalScore">0</span></div>
+  <p id="resultMotivation" class="font-bold text-indigo-700"></p>
+
+  <div id="certificate" class="border-4 border-double border-indigo-400 p-6 mt-6 bg-white rounded-xl">
+   <div class="text-4xl">🎓</div>
+   <h2 class="text-2xl font-bold text-indigo-800 mt-3">SERTIFIKAT PENGHARGAAN</h2>
+   <p class="text-sm text-slate-500 mt-4">Diberikan kepada</p>
+   <h2 id="certName" class="text-3xl font-bold text-indigo-700 my-3"></h2>
+   <p class="text-sm">Telah menyelesaikan kuis TKA Matematika Kelas IX</p>
+   <p class="font-bold mt-3">Eksplorasi Jaring-Jaring Bangun Ruang</p>
+   <p class="mt-4 text-sm">Dengan nilai:</p>
+   <h2 id="certScore" class="text-4xl font-black text-indigo-700"></h2>
+   <p id="certDate" class="text-xs text-slate-400 mt-4"></p>
+   <p class="text-sm font-bold mt-5">Siti Sundari, M.Pd.</p>
+  </div>
+
+  <div class="flex flex-wrap justify-center gap-3 mt-5 no-print">
+   <button onclick="window.print()" class="btn btn-primary"><i class="fa-solid fa-print"></i> Cetak Sertifikat</button>
+   <button onclick="exitQuiz()" class="btn btn-light">Pilih Level Lain</button>
+   <button onclick="showPage('home')" class="btn bg-orange-100 text-orange-700">Beranda</button>
+  </div>
+ </div>
+</section>
+
+<!-- GAMES -->
+<section id="games" class="section hidden-section">
+ <span class="badge bg-pink-100 text-pink-700">06 • GAME-BASED LEARNING</span>
+ <h1 class="text-3xl font-bold mt-3">Geometry Match Game 🎮</h1>
+ <p class="text-slate-500 mt-2">Cocokkan sisi pada jaring-jaring prisma dengan fungsinya.</p>
+
+ <div class="card p-5 mt-5">
+  <div class="flex justify-between items-center flex-wrap gap-2">
+   <h3 class="font-bold text-lg">🧩 Pasangkan dengan Benar</h3>
+   <div class="badge bg-indigo-100 text-indigo-700">Skor: <span id="gameScore">0</span></div>
+  </div>
+  <p class="text-sm text-slate-500 mt-2">Pilih satu kartu di sebelah kiri, kemudian pilih pasangan yang sesuai di sebelah kanan.</p>
+
+  <div class="grid grid-cols-2 gap-3 mt-5">
+   <div>
+    <h4 class="font-black text-sm mb-3 text-indigo-700">BAGIAN BANGUN</h4>
+    <div id="gameLeft" class="space-y-3"></div>
+   </div>
+   <div>
+    <h4 class="font-black text-sm mb-3 text-cyan-700">FUNGSI / KARAKTERISTIK</h4>
+    <div id="gameRight" class="space-y-3"></div>
+   </div>
+  </div>
+  <div id="gameFeedback" class="mt-5 p-4 rounded-xl bg-slate-50 text-sm font-bold">Mulai permainan dengan memilih kartu.</div>
+  <button onclick="initGame()" class="btn btn-primary mt-4">🔄 Ulangi Permainan</button>
+ </div>
+</section>
+
+<!-- KESIMPULAN -->
+<section id="kesimpulan" class="section hidden-section">
+ <span class="badge bg-green-100 text-green-700">07 • PENGUATAN KONSEP</span>
+ <h1 class="text-3xl font-bold mt-3">Kesimpulan Pembelajaran ⭐</h1>
+ <p class="text-slate-500 mt-2">Mari kita rangkum pengetahuan yang telah diperoleh.</p>
+
+ <div class="card p-5 mt-5">
+  <h3 class="font-bold text-lg">Apa Itu Jaring-Jaring Bangun Ruang?</h3>
+  <p class="text-slate-600 text-sm mt-2 leading-relaxed">Jaring-jaring bangun ruang adalah susunan bangun datar yang apabila dilipat pada sisi-sisinya dapat membentuk bangun ruang tertentu.</p>
+ </div>
+
+ <div class="grid md:grid-cols-2 gap-4 mt-4">
+  <div class="card p-5"><div class="text-3xl">📦</div><h3 class="font-bold mt-2">Prisma</h3><p class="text-sm text-slate-500 mt-2">Memiliki dua alas dan tutup yang kongruen serta sisi tegak berbentuk persegi panjang atau jajargenjang.</p><b class="text-indigo-700 text-sm block mt-2">Prisma segitiga: 5 sisi, 9 rusuk, 6 titik sudut.</b></div>
+  <div class="card p-5"><div class="text-3xl">🥫</div><h3 class="font-bold mt-2">Tabung</h3><p class="text-sm text-slate-500 mt-2">Jaring-jaringnya terdiri atas dua lingkaran kongruen dan satu persegi panjang.</p></div>
+  <div class="card p-5"><div class="text-3xl">🔺</div><h3 class="font-bold mt-2">Limas</h3><p class="text-sm text-slate-500 mt-2">Terdiri atas satu alas berbentuk segi banyak dan beberapa sisi tegak berbentuk segitiga yang bertemu pada satu titik puncak.</p></div>
+  <div class="card p-5"><div class="text-3xl">🍦</div><h3 class="font-bold mt-2">Kerucut</h3><p class="text-sm text-slate-500 mt-2">Terdiri atas sebuah lingkaran sebagai alas dan sebuah juring lingkaran sebagai selimut.</p></div>
+ </div>
+
+ <div class="card p-5 mt-5 bg-indigo-50 border-none">
+  <h3 class="font-bold text-indigo-800">🔑 Kunci Penalaran Jaring-Jaring Prisma</h3>
+  <ol class="list-decimal ml-5 mt-3 text-sm space-y-2 text-slate-700">
+   <li>Identifikasi jumlah dan bentuk sisi pada jaring-jaring.</li>
+   <li>Tentukan dua sisi alas yang kongruen.</li>
+   <li>Perhatikan sisi-sisi tegak yang menghubungkan kedua alas.</li>
+   <li>Bayangkan arah lipatan setiap sisi.</li>
+   <li>Pastikan tidak ada sisi yang saling bertumpuk atau menutup ruang yang keliru.</li>
+  </ol>
+ </div>
+
+ <button onclick="showPage('kuis')" class="btn btn-primary mt-5">Uji Pemahaman Sekarang →</button>
+</section>
+
+<!-- REFLEKSI -->
+<section id="refleksi" class="section hidden-section">
+ <span class="badge bg-yellow-100 text-yellow-800">08 • REFLEKSI KOLABORATIF</span>
+ <h1 class="text-3xl font-bold mt-3">Papan Refleksi Digital 📝</h1>
+ <p class="text-slate-500 mt-2">Tuliskan pengalaman belajarmu. Setiap ide berharga!</p>
+
+ <div class="card p-5 mt-5">
+  <h3 class="font-bold text-lg">Bagaimana Pengalaman Belajarmu?</h3>
+  <form id="reflectionForm" class="mt-4 space-y-3">
+   <div>
+    <label class="font-bold text-sm">Nama siswa</label>
+    <input id="reflectionName" required maxlength="50" class="w-full mt-2 p-3 border-2 border-slate-200 rounded-xl" placeholder="Contoh: Shaka atau Haflasea">
+   </div>
+   <div>
+    <label class="font-bold text-sm">Perasaan / Kesan</label>
+    <select id="reflectionFeeling" class="w-full mt-2 p-3 border-2 border-slate-200 rounded-xl">
+     <option value="😍 Sangat senang">😍 Sangat senang</option>
+     <option value="😊 Senang">😊 Senang</option>
+     <option value="🤔 Penasaran">🤔 Penasaran</option>
+     <option value="😐 Biasa saja">😐 Biasa saja</option>
+     <option value="😵 Masih bingung">😵 Masih bingung</option>
+    </select>
+   </div>
+   <div>
+    <label class="font-bold text-sm">Pesan refleksi</label>
+    <textarea id="reflectionMessage" required maxlength="500" rows="4" class="w-full mt-2 p-3 border-2 border-slate-200 rounded-xl" placeholder="Hari ini saya belajar bahwa..."></textarea>
+   </div>
+   <button type="submit" class="btn btn-primary w-full">📌 Tempel Refleksi ke Papan</button>
+  </form>
+  <div id="reflectionStatus" class="text-sm mt-3 text-slate-500"></div>
+ </div>
+
+ <div class="mt-6">
+  <div class="flex justify-between items-center flex-wrap gap-2">
+   <h3 class="font-bold text-xl">📌 Papan Ide Siswa</h3>
+   <span class="badge bg-indigo-100 text-indigo-700">Digital Sticky Notes</span>
+  </div>
+  <div id="reflectionBoard" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"></div>
+ </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="text-center py-8 mt-10 border-t border-slate-200">
+ <div class="text-indigo-700 font-black">MATH EXPLORER • SMP KELAS IX</div>
+ <p class="text-xs text-slate-400 mt-2">Media Pembelajaran Interaktif TKA Matematika</p>
+ <p class="text-sm font-bold text-slate-500 mt-2">by Siti Sundari, M.Pd. © 2026</p>
+</footer>
+
+</main>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t z-50 justify-around p-2 shadow-lg">
+ <button onclick="showPage('home')" class="text-indigo-700 text-center text-xs"><i class="fa-solid fa-house block text-lg"></i>Home</button>
+ <button onclick="showPage('materi')" class="text-indigo-700 text-center text-xs"><i class="fa-solid fa-book block text-lg"></i>Materi</button>
+ <button onclick="showPage('simulasi')" class="text-indigo-700 text-center text-xs"><i class="fa-solid fa-cube block text-lg"></i>Simulasi</button>
+ <button onclick="showPage('kuis')" class="text-indigo-700 text-center text-xs"><i class="fa-solid fa-trophy block text-lg"></i>Kuis</button>
+ <button onclick="showPage('refleksi')" class="text-indigo-700 text-center text-xs"><i class="fa-solid fa-note-sticky block text-lg"></i>Refleksi</button>
+</div>
+
+<script>
+/* ==================================================
+   KONFIGURASI APLIKASI
+================================================== */
+
+// Tempel URL Google Apps Script Web App di sini.
+// Kosongkan jika menggunakan penyimpanan lokal.
+const SHEET_WEB_APP_URL = "";
+
+/* ==================================================
+   AUDIO SYNTHESIZER
+================================================== */
+
+let audioOn=true;
+let audioContext=null;
+
+function playTone(type='click'){
+ if(!audioOn)return;
+ try{
+  audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();
+  if(audioContext.state==='suspended')audioContext.resume();
+
+  const osc=audioContext.createOscillator();
+  const gain=audioContext.createGain();
+  osc.connect(gain);
+  gain.connect(audioContext.destination);
+
+  let freq=type==='correct'?880:type==='wrong'?220:500;
+  osc.frequency.value=freq;
+  osc.type='sine';
+  gain.gain.setValueAtTime(.12,audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+.22);
+  osc.start();
+  osc.stop(audioContext.currentTime+.23);
+
+  if(type==='correct'){
+   setTimeout(()=>playExtraTone(1100),100);
+  }
+ }catch(e){}
+}
+
+function playExtraTone(freq){
+ if(!audioOn||!audioContext)return;
+ const osc=audioContext.createOscillator();
+ const gain=audioContext.createGain();
+ osc.connect(gain);
+ gain.connect(audioContext.destination);
+ osc.frequency.value=freq;
+ gain.gain.setValueAtTime(.08,audioContext.currentTime);
+ gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+.25);
+ osc.start();
+ osc.stop(audioContext.currentTime+.26);
+}
+
+function toggleAudio(){
+ audioOn=!audioOn;
+ const btn=document.getElementById('audioBtn');
+ btn.innerHTML=audioOn?
+ '<i class="fa-solid fa-volume-high"></i> Audio ON':
+ '<i class="fa-solid fa-volume-xmark"></i> Audio OFF';
+ btn.className=audioOn?
+ 'btn bg-emerald-100 text-emerald-700 text-sm':
+ 'btn bg-red-100 text-red-700 text-sm';
+ if(audioOn)playTone('correct');
+}
+
+/* ==================================================
+   NAVIGASI SPA
+================================================== */
+
+function showPage(page){
+ document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden-section'));
+ document.getElementById(page).classList.remove('hidden-section');
+
+ document.querySelectorAll('.nav-item').forEach(b=>{
+  b.classList.toggle('active',b.dataset.page===page);
+ });
+
+ window.scrollTo({top:0,behavior:'smooth'});
+ playTone('click');
+
+ if(page==='games'&&!gameInitialized)initGame();
+ if(page==='refleksi')renderReflections();
+ if(page==='materi'&&!document.getElementById('materialContent').innerHTML)materialTab('prisma');
+}
+
+/* ==================================================
+   MATERI INTERAKTIF
+================================================== */
+
+const materials={
+ prisma:{
+  title:'Prisma',
+  emoji:'📦',
+  description:'Prisma adalah bangun ruang yang memiliki dua bidang alas dan tutup yang kongruen serta sejajar. Sisi tegaknya menghubungkan kedua bidang tersebut.',
+  sides:'Jumlah sisi prisma segi-n adalah n + 2.',
+  example:'Prisma segitiga memiliki 5 sisi, 9 rusuk, dan 6 titik sudut.',
+  net:'Jaring-jaring prisma segitiga terdiri atas 2 segitiga kongruen dan 3 persegi panjang.',
+  application:'Kemasan cokelat, tenda berbentuk prisma segitiga, dan atap bangunan.',
+  formula:'Jumlah sisi = n + 2<br>Jumlah rusuk = 3n<br>Jumlah titik sudut = 2n',
+  diagram:'prisma'
+ },
+ tabung:{
+  title:'Tabung',
+  emoji:'🥫',
+  description:'Tabung merupakan bangun ruang dengan dua alas berbentuk lingkaran yang kongruen dan sejajar, serta satu selimut lengkung.',
+  sides:'Memiliki 3 sisi: 2 lingkaran dan 1 selimut lengkung.',
+  example:'Kaleng minuman, drum, dan pipa.',
+  net:'Jaring-jaring tabung terdiri atas dua lingkaran kongruen dan satu persegi panjang.',
+  application:'Desain kaleng makanan dan wadah penyimpanan.',
+  formula:'Luas permukaan = 2πr(r + t)<br>Volume = πr²t',
+  diagram:'tabung'
+ },
+ limas:{
+  title:'Limas',
+  emoji:'🔺',
+  description:'Limas merupakan bangun ruang dengan satu alas berbentuk segi banyak dan sisi-sisi tegak berbentuk segitiga yang bertemu pada satu titik puncak.',
+  sides:'Limas segi-n mempunyai n + 1 sisi.',
+  example:'Limas segiempat memiliki 5 sisi, 8 rusuk, dan 5 titik sudut.',
+  net:'Jaring-jaring limas segiempat terdiri atas satu persegi sebagai alas dan empat segitiga sebagai sisi tegak.',
+  application:'Atap bangunan, ornamen, dan desain piramida.',
+  formula:'Jumlah sisi = n + 1<br>Jumlah rusuk = 2n<br>Jumlah titik sudut = n + 1',
+  diagram:'limas'
+ },
+ kerucut:{
+  title:'Kerucut',
+  emoji:'🍦',
+  description:'Kerucut memiliki satu alas berbentuk lingkaran dan satu selimut lengkung yang mengerucut pada satu titik puncak.',
+  sides:'Terdiri atas alas lingkaran dan selimut lengkung.',
+  example:'Topi ulang tahun, corong, dan cone es krim.',
+  net:'Jaring-jaring kerucut terdiri atas satu lingkaran dan satu juring lingkaran.',
+  application:'Kemasan berbentuk corong dan desain cone es krim.',
+  formula:'Luas permukaan = πr(r + s)<br>Volume = ⅓πr²t',
+  diagram:'kerucut'
+ }
+};
+
+function diagramSVG(type){
+ const drawings={
+  prisma:`<polygon points="80,65 145,30 210,65 145,100" fill="#a5b4fc" stroke="#4338ca" stroke-width="2"/><polygon points="80,65 80,170 145,205 145,100" fill="#818cf8" stroke="#4338ca" stroke-width="2"/><polygon points="145,100 210,65 210,170 145,205" fill="#c7d2fe" stroke="#4338ca" stroke-width="2"/>`,
+  tabung:`<ellipse cx="145" cy="50" rx="70" ry="25" fill="#c7d2fe" stroke="#4338ca" stroke-width="2"/><path d="M75 50 V165 M215 50 V165" stroke="#4338ca" stroke-width="2" fill="none"/><path d="M75 165 A70 25 0 0 0 215 165" fill="#818cf8" stroke="#4338ca" stroke-width="2"/><path d="M75 165 A70 25 0 0 1 215 165" fill="none" stroke="#4338ca" stroke-width="2" stroke-dasharray="5 4"/>`,
+  limas:`<polygon points="145,25 65,170 225,170" fill="#a5b4fc" stroke="#4338ca" stroke-width="2"/><polygon points="145,25 145,170 225,170" fill="#c7d2fe" stroke="#4338ca" stroke-width="2"/><path d="M65 170 L145 205 L225 170" fill="#818cf8" stroke="#4338ca" stroke-width="2"/>`,
+  kerucut:`<path d="M145 30 L65 165 Q145 200 225 165 Z" fill="#c7d2fe" stroke="#4338ca" stroke-width="2"/><ellipse cx="145" cy="165" rx="80" ry="25" fill="#818cf8" stroke="#4338ca" stroke-width="2"/>`
+ };
+ return `<svg viewBox="0 0 290 230" width="100%" height="220">${drawings[type]}</svg>`;
+}
+
+function materialTab(key,btn){
+ document.querySelectorAll('#materi .tab').forEach(t=>t.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+ else document.querySelectorAll('#materi .tab')[0].classList.add('active');
+
+ const m=materials[key];
+ document.getElementById('materialContent').innerHTML=`
+ <div class="card p-5">
+  <div class="grid md:grid-cols-2 gap-5 items-center">
+   <div>
+    <div class="text-5xl">${m.emoji}</div>
+    <h2 class="text-3xl font-bold mt-3">${m.title}</h2>
+    <p class="text-slate-500 mt-3 leading-relaxed text-sm">${m.description}</p>
+   </div>
+   <div class="geometry">${diagramSVG(m.diagram)}</div>
+  </div>
+  <div class="grid md:grid-cols-2 gap-3 mt-6">
+   <div class="bg-indigo-50 p-4 rounded-xl">
+    <b class="text-indigo-800">📐 Karakteristik</b>
+    <p class="text-sm mt-2">${m.sides}</p>
+   </div>
+   <div class="bg-cyan-50 p-4 rounded-xl">
+    <b class="text-cyan-800">🧩 Jaring-Jaring</b>
+    <p class="text-sm mt-2">${m.net}</p>
+   </div>
+   <div class="bg-orange-50 p-4 rounded-xl">
+    <b class="text-orange-800">🌍 Contoh Nyata</b>
+    <p class="text-sm mt-2">${m.application}</p>
+   </div>
+   <div class="bg-green-50 p-4 rounded-xl">
+    <b class="text-green-800">🔢 Rumus / Pola</b>
+    <p class="text-sm mt-2">${m.formula}</p>
+   </div>
+  </div>
+  <div class="mt-5 p-4 bg-slate-50 rounded-xl">
+   <b>Contoh:</b>
+   <p class="text-sm mt-2">${m.example}</p>
+  </div>
+  <div class="mt-5 flex justify-between items-center gap-3 flex-wrap">
+   <span class="text-xs text-slate-400">Pelajari konsep sebelum melanjutkan.</span>
+   <button onclick="showPage('simulasi')" class="btn btn-primary">Coba Simulasi →</button>
+  </div>
+ </div>`;
+}
+
+/* ==================================================
+   MINDFULNESS
+================================================== */
+
+function mindful(){
+ let count=10;
+ const el=document.getElementById('mindfulText');
+ el.textContent='Tarik napas... '+count;
+ const timer=setInterval(()=>{
+  count--;
+  if(count<=0){
+   clearInterval(timer);
+   el.textContent='✨ Hebat! Pikiran siap untuk belajar.';
+  }else{
+   el.textContent='Bernapas dengan tenang... '+count;
+  }
+ },1000);
+}
+
+/* ==================================================
+   SIMULASI JARING-JARING
+================================================== */
+
+const faceNames={
+ 1:'Persegi panjang pertama: salah satu sisi tegak prisma.',
+ 2:'Persegi panjang kedua: sisi tegak yang menghubungkan bagian alas.',
+ 3:'Persegi panjang ketiga: sisi tegak terakhir yang melengkapi selimut prisma.',
+ 4:'Segitiga pertama: salah satu bidang alas atau tutup prisma.',
+ 5:'Segitiga kedua: bidang alas/tutup yang kongruen dengan segitiga pertama.'
+};
+
+function selectFace(n){
+ document.querySelectorAll('.net-face').forEach(el=>el.classList.remove('selected'));
+ document.querySelectorAll('.net-face')[n-1].classList.add('selected');
+ document.getElementById('faceDetail').textContent=faceNames[n];
+ document.getElementById('simInfo').innerHTML='<b>Bagian '+n+':</b> '+faceNames[n];
+ playTone('click');
+}
+
+function netMode(mode){
+ const faces=document.querySelectorAll('.net-face');
+ if(mode==='open'){
+  faces.forEach(el=>el.style.opacity='1');
+  document.getElementById('simInfo').innerHTML='<b>Jaring-jaring terbentang!</b> Perhatikan susunan tiga persegi panjang dan dua segitiga kongruen.';
+ }else if(mode==='fold'){
+  document.getElementById('simInfo').innerHTML='<b>Bayangkan proses pelipatan.</b> Ketiga persegi panjang membentuk sisi tegak. Kedua segitiga menjadi alas dan tutup prisma.';
+  faces.forEach(el=>el.style.opacity='.75');
+ }else{
+  faces.forEach(el=>{
+   el.style.opacity='1';
+   el.classList.remove('selected');
+  });
+  document.getElementById('simInfo').innerHTML='Simulasi diatur ulang. Pilih sisi untuk mengeksplorasi kembali.';
+  document.getElementById('faceDetail').textContent='Pilih salah satu sisi pada gambar.';
+ }
+ playTone('click');
+}
+
+function challenge(btn,correct){
+ document.querySelectorAll('#simulasi .option').forEach(b=>b.disabled=true);
+ btn.classList.add(correct?'correct':'wrong');
+ document.getElementById('challengeFeedback').textContent=correct?
+ '🎉 Benar! Prisma segitiga memiliki 9 rusuk dan 6 titik sudut.':
+ 'Belum tepat. Ingat, prisma segitiga mempunyai dua segitiga kongruen yang masing-masing memiliki 3 titik sudut.';
+ playTone(correct?'correct':'wrong');
+}
+
+/* ==================================================
+   BANK SOAL KUIS
+================================================== */
+
+const quizBank={
+ mudah:[
+  {q:'Jaring-jaring bangun ruang adalah...',o:['Susunan bangun datar yang dapat dilipat menjadi bangun ruang','Kumpulan garis yang tidak berhubungan','Bangun datar tanpa sisi'],a:0,e:'Jaring-jaring merupakan susunan bidang datar yang jika dilipat dapat membentuk bangun ruang.'},
+  {q:'Prisma segitiga memiliki berapa sisi?',o:['4 sisi','5 sisi','6 sisi'],a:1,e:'Prisma segitiga memiliki dua segitiga dan tiga sisi tegak, sehingga total 5 sisi.'},
+  {q:'Dua alas prisma segitiga berbentuk...',o:['Lingkaran','Persegi','Segitiga kongruen'],a:2,e:'Kedua alas prisma harus memiliki bentuk dan ukuran sama serta sejajar.'},
+  {q:'Sisi tegak prisma segitiga umumnya berbentuk...',o:['Persegi panjang','Lingkaran','Segitiga'],a:0,e:'Sisi tegak prisma tegak berbentuk persegi panjang.'},
+  {q:'Jaring-jaring tabung terdiri dari...',o:['Dua segitiga dan persegi','Dua lingkaran dan persegi panjang','Empat segitiga'],a:1,e:'Tabung memiliki dua lingkaran dan satu persegi panjang sebagai selimut.'},
+  {q:'Jaring-jaring limas segiempat memiliki...',o:['Satu persegi dan empat segitiga','Dua persegi dan dua lingkaran','Enam persegi'],a:0,e:'Limas segiempat terdiri dari satu alas persegi dan empat sisi segitiga.'},
+  {q:'Jaring-jaring kerucut memiliki...',o:['Dua persegi','Satu lingkaran dan satu juring','Dua segitiga'],a:1,e:'Kerucut dibentuk oleh alas lingkaran dan selimut berupa juring.'},
+  {q:'Prisma segitiga memiliki berapa titik sudut?',o:['4','5','6'],a:2,e:'Dua segitiga kongruen memiliki total 6 titik sudut.'},
+  {q:'Sisi yang berhadapan dengan alas prisma adalah...',o:['Tutup yang kongruen','Sisi lengkung','Titik puncak'],a:0,e:'Prisma memiliki dua bidang alas dan tutup yang kongruen dan sejajar.'},
+  {q:'Benda yang menyerupai tabung adalah...',o:['Tenda','Kaleng minuman','Piramida'],a:1,e:'Kaleng minuman memiliki dua alas lingkaran dan selimut lengkung.'}
+ ],
+ sedang:[
+  {q:'Sebuah prisma segitiga memiliki 5 sisi. Jika satu alasnya segitiga, bentuk dua sisi lainnya adalah...',o:['Segitiga dan lingkaran','Tiga persegi panjang sebagai sisi tegak','Dua lingkaran'],a:1,e:'Tiga persegi panjang menghubungkan sisi-sisi yang bersesuaian pada kedua segitiga.'},
+  {q:'Pada jaring-jaring prisma segitiga, dua segitiga harus kongruen karena...',o:['Menjadi alas dan tutup','Menjadi rusuk','Menjadi titik sudut'],a:0,e:'Kedua segitiga membentuk alas dan tutup yang sama bentuk dan ukurannya.'},
+  {q:'Jika tiga persegi panjang disusun berurutan, ketiganya akan menjadi...',o:['Dua alas','Seluruh sisi tegak prisma','Titik puncak'],a:1,e:'Ketiga persegi panjang membentuk selimut atau sisi tegak prisma.'},
+  {q:'Sebuah jaring-jaring mempunyai dua segitiga kongruen dan tiga persegi panjang. Bangun yang terbentuk adalah...',o:['Prisma segitiga','Limas segitiga','Tabung'],a:0,e:'Komposisi tersebut merupakan jaring-jaring prisma segitiga.'},
+  {q:'Sebuah prisma segitiga memiliki berapa rusuk?',o:['6','8','9'],a:2,e:'Ada 3 rusuk pada masing-masing segitiga dan 3 rusuk penghubung, total 9.'},
+  {q:'Jika sisi tegak prisma segitiga disusun tidak berurutan, apa yang harus diperiksa?',o:['Warna sisinya','Panjang sisi yang saling bertemu','Jumlah warna'],a:1,e:'Sisi yang saling bertemu harus mempunyai ukuran rusuk yang bersesuaian.'},
+  {q:'Sebuah prisma segilima memiliki jumlah sisi...',o:['5','6','7'],a:2,e:'Jumlah sisi prisma segi-n adalah n+2. Jadi 5+2=7.'},
+  {q:'Pada jaring-jaring prisma, sisi tegak menghubungkan...',o:['Dua alas yang bersesuaian','Dua titik puncak','Dua lingkaran'],a:0,e:'Sisi tegak menghubungkan rusuk-rusuk bersesuaian pada kedua alas.'},
+  {q:'Sebuah jaring-jaring prisma memiliki dua alas yang tidak sama ukuran. Apakah dapat membentuk prisma tegak?',o:['Ya, selalu','Tidak, karena alas harus kongruen','Ya, jika warnanya sama'],a:1,e:'Kedua alas prisma harus kongruen dan sejajar.'},
+  {q:'Jika satu sisi tegak berbentuk persegi panjang dengan ukuran 8 cm × 5 cm, ukuran sisi tegak pasangannya yang berbagi panjang 8 cm adalah...',o:['Harus memiliki sisi yang sesuai sepanjang 8 cm','Bebas berapa saja','Harus berbentuk lingkaran'],a:0,e:'Sisi-sisi yang bertemu harus mempunyai ukuran rusuk bersesuaian.'}
+ ],
+ sulit:[
+  {q:'Jaring-jaring prisma segitiga terdiri atas tiga persegi panjang dan dua segitiga. Jika ketiga persegi panjang memiliki lebar 4 cm, 5 cm, dan 6 cm, maka keliling alas segitiganya adalah...',o:['10 cm','15 cm','20 cm','24 cm'],a:1,e:'Lebar ketiga persegi panjang merupakan panjang ketiga sisi segitiga alas. Kelilingnya 4+5+6=15 cm.'},
+  {q:'Sebuah prisma segitiga dibuka. Sisi segitiga A terletak di tengah dan sisi segitiga B terhubung pada sisi tegak yang berbeda. Hubungan yang benar adalah...',o:['A dan B merupakan alas dan tutup','A dan B merupakan sisi tegak','A dan B harus bertumpuk'],a:0,e:'Dua segitiga kongruen membentuk dua bidang ujung prisma.'},
+  {q:'Seorang siswa menyusun dua segitiga kongruen dan hanya dua persegi panjang. Kesimpulan yang tepat adalah...',o:['Sudah menjadi prisma segitiga','Belum lengkap karena satu sisi tegak kurang','Sudah menjadi tabung','Menjadi limas'],a:1,e:'Prisma segitiga membutuhkan tiga sisi tegak untuk menghubungkan ketiga pasang sisi alas.'},
+  {q:'Sebuah prisma memiliki alas segienam. Berapa jumlah sisi, rusuk, dan titik sudutnya?',o:['8, 18, 12','6, 12, 10','7, 15, 12','8, 12, 18'],a:0,e:'Untuk n=6, sisi=n+2=8, rusuk=3n=18, titik sudut=2n=12.'},
+  {q:'Jika dua segitiga pada jaring-jaring prisma memiliki ukuran berbeda, kemungkinan terbesar adalah...',o:['Keduanya tetap menjadi alas prisma','Jaring-jaring tidak membentuk prisma dengan benar','Jumlah rusuk berubah','Menjadi tabung'],a:1,e:'Prisma harus memiliki alas dan tutup kongruen. Ukuran berbeda menyebabkan bentuk bukan prisma.'},
+  {q:'Sebuah kemasan berbentuk prisma segitiga memiliki keliling alas 18 cm dan panjang prisma 10 cm. Luas seluruh sisi tegaknya adalah...',o:['100 cm²','180 cm²','280 cm²','360 cm²'],a:1,e:'Luas selimut prisma = keliling alas × tinggi prisma = 18 × 10 = 180 cm².'},
+  {q:'Pada jaring-jaring prisma, tiga sisi tegak disusun berurutan. Jika panjang sisi alas segitiga 3 cm, 4 cm, dan 5 cm, maka lebar masing-masing sisi tegak adalah...',o:['3 cm, 4 cm, dan 5 cm','3 cm, 3 cm, dan 3 cm','4 cm, 4 cm, dan 4 cm','5 cm, 5 cm, dan 5 cm'],a:0,e:'Lebar sisi tegak mengikuti panjang sisi-sisi alas yang bersesuaian.'},
+  {q:'Sebuah jaring-jaring prisma segitiga memiliki dua segitiga yang saling berhadapan dan tiga persegi panjang. Jika satu persegi panjang dihilangkan, akibatnya adalah...',o:['Prisma tetap tertutup sempurna','Ada bagian sisi tegak yang terbuka','Alas berubah menjadi lingkaran','Titik sudut bertambah'],a:1,e:'Satu persegi panjang yang hilang menyebabkan sisi tegak tidak lengkap.'},
+  {q:'Diketahui sebuah prisma segitiga mempunyai 9 rusuk. Jika panjang masing-masing rusuk alas adalah 3 cm, 4 cm, dan 5 cm serta panjang prisma 8 cm, luas seluruh sisi tegaknya adalah...',o:['72 cm²','96 cm²','120 cm²','144 cm²'],a:2,e:'Keliling alas = 12 cm. Luas selimut = 12 × 8 = 96 cm². Jadi jawaban yang benar adalah 96 cm².',correctAnswer:1},
+  {q:'Sebuah desain kemasan prisma segitiga mempunyai dua alas yang kongruen. Jika alas pertama digeser tanpa mengubah orientasi dan jaraknya tetap, bentuk yang dihasilkan adalah...',o:['Prisma dengan alas sejajar','Limas dengan satu puncak','Kerucut','Bola'],a:0,e:'Dua bidang kongruen dan sejajar yang dihubungkan sisi tegak membentuk prisma.'}
+ ]
+};
+
+// Perbaikan kunci jawaban untuk soal sulit nomor 9.
+quizBank.sulit[8].a=1;
+
+let quizQuestions=[];
+let quizIndex=0;
+let quizScore=0;
+let quizLevel='';
+let quizAnswered=false;
+let quizName='';
+
+function startQuiz(level){
+ quizName=document.getElementById('studentName').value.trim();
+ if(!quizName){
+  alert('Silakan masukkan nama terlebih dahulu untuk sertifikat.');
+  document.getElementById('studentName').focus();
+  return;
+ }
+ quizLevel=level;
+ quizQuestions=quizBank[level];
+ quizIndex=0;
+ quizScore=0;
+ document.getElementById('quizStart').classList.add('hidden');
+ document.getElementById('quizResult').classList.add('hidden');
+ document.getElementById('quizPlay').classList.remove('hidden');
+ document.getElementById('quizLevel').textContent='LEVEL '+level.toUpperCase();
+ renderQuestion();
+}
+
+function renderQuestion(){
+ quizAnswered=false;
+ const q=quizQuestions[quizIndex];
+ document.getElementById('quizNumber').textContent='Soal '+(quizIndex+1)+' dari 10';
+ document.getElementById('quizScore').textContent=quizScore;
+ document.getElementById('quizProgress').style.width=((quizIndex+1)*10)+'%';
+ document.getElementById('questionText').textContent=q.q;
+ document.getElementById('quizFeedback').classList.add('hidden');
+ document.getElementById('nextQuestion').classList.add('hidden');
+
+ document.getElementById('questionOptions').innerHTML=q.o.map((o,i)=>`
+ <button class="option" onclick="answerQuestion(${i})">
+ <span class="inline-block bg-indigo-100 text-indigo-700 rounded-lg px-2 py-1 mr-2">${String.fromCharCode(65+i)}</span>${o}
+ </button>`).join('');
+}
+
+function answerQuestion(index){
+ if(quizAnswered)return;
+ quizAnswered=true;
+ const q=quizQuestions[quizIndex];
+ const buttons=document.querySelectorAll('#questionOptions .option');
+ const isCorrect=index===q.a;
+ if(isCorrect)quizScore+=10;
+
+ buttons.forEach((b,i)=>{
+  b.disabled=true;
+  if(i===q.a)b.classList.add('correct');
+  else if(i===index)b.classList.add('wrong');
+ });
+
+ const fb=document.getElementById('quizFeedback');
+ fb.classList.remove('hidden');
+ fb.className='mt-5 rounded-xl p-4 text-sm '+(isCorrect?'bg-green-50 text-green-800':'bg-red-50 text-red-800');
+ fb.innerHTML=`<b>${isCorrect?'🎉 Jawaban Benar!':'💡 Belum Tepat!'}</b><br><br>${q.e}`;
+ document.getElementById('quizScore').textContent=quizScore;
+ document.getElementById('nextQuestion').classList.remove('hidden');
+ document.getElementById('nextQuestion').textContent=quizIndex===9?'Lihat Hasil 🏆':'Soal Selanjutnya →';
+ playTone(isCorrect?'correct':'wrong');
+}
+
+function nextQuiz(){
+ if(!quizAnswered)return;
+ if(quizIndex<9){
+  quizIndex++;
+  renderQuestion();
+ }else{
+  finishQuiz();
+ }
+}
+
+function finishQuiz(){
+ document.getElementById('quizPlay').classList.add('hidden');
+ document.getElementById('quizResult').classList.remove('hidden');
+
+ const score=quizScore;
+ const percent=score;
+ document.getElementById('finalScore').textContent=percent;
+ document.getElementById('resultText').textContent=quizName+' berhasil menyelesaikan 10 soal level '+quizLevel+'.';
+ document.getElementById('certName').textContent=quizName;
+ document.getElementById('certScore').textContent=percent;
+ document.getElementById('certDate').textContent='Tanggal: '+new Date().toLocaleDateString('id-ID');
+ document.getElementById('resultMotivation').textContent=
+ percent>=90?'🌟 Luar biasa! Kamu adalah Math Explorer sejati!':
+ percent>=70?'👏 Bagus! Terus tingkatkan kemampuanmu!':
+ '💪 Tetap semangat! Pelajari kembali materi dan coba lagi.';
+
+ if(window.confetti){
+  confetti({particleCount:150,spread:100,origin:{y:.6}});
+ }
+ playTone('correct');
+}
+
+function exitQuiz(){
+ document.getElementById('quizPlay').classList.add('hidden');
+ document.getElementById('quizResult').classList.add('hidden');
+ document.getElementById('quizStart').classList.remove('hidden');
+}
+
+/* ==================================================
+   GAME MATCHING
+================================================== */
+
+let gameInitialized=false;
+let gameLeftSelected=null;
+let gameScore=0;
+let matchedPairs=[];
+
+const gameItems=[
+ {id:1,left:'🔺 Segitiga pertama',right:'Bidang alas prisma'},
+ {id:2,left:'🔺 Segitiga kedua',right:'Bidang tutup prisma'},
+ {id:3,left:'▭ Persegi panjang 1',right:'Sisi tegak pertama'},
+ {id:4,left:'▭ Persegi panjang 2',right:'Sisi tegak kedua'},
+ {id:5,left:'▭ Persegi panjang 3',right:'Sisi tegak ketiga'}
+];
+
+function initGame(){
+ gameInitialized=true;
+ gameLeftSelected=null;
+ gameScore=0;
+ matchedPairs=[];
+ document.getElementById('gameScore').textContent='0';
+
+ const left=[...gameItems];
+ const right=[...gameItems].sort(()=>Math.random()-.5);
+
+ document.getElementById('gameLeft').innerHTML=left.map(item=>`
+ <button class="option text-xs md:text-sm game-left" data-id="${item.id}" onclick="selectGameLeft(${item.id},this)">${item.left}</button>`).join('');
+
+ document.getElementById('gameRight').innerHTML=right.map(item=>`
+ <button class="option text-xs md:text-sm game-right" data-id="${item.id}" onclick="selectGameRight(${item.id},this)">${item.right}</button>`).join('');
+
+ document.getElementById('gameFeedback').textContent='Pilih pasangan yang sesuai. Kamu bisa menggunakan sentuhan atau klik!';
+}
+
+function selectGameLeft(id,btn){
+ if(matchedPairs.includes(id))return;
+ gameLeftSelected=id;
+ document.querySelectorAll('.game-left').forEach(b=>b.classList.remove('selected'));
+ btn.classList.add('selected');
+ document.getElementById('gameFeedback').textContent='Sekarang pilih karakteristik yang sesuai di sebelah kanan.';
+ playTone('click');
+}
+
+function selectGameRight(id,btn){
+ if(gameLeftSelected===null){
+  document.getElementById('gameFeedback').textContent='Pilih bagian bangun di sebelah kiri terlebih dahulu.';
+  return;
+ }
+ if(matchedPairs.includes(id))return;
+
+ if(gameLeftSelected===id){
+  matchedPairs.push(id);
+  gameScore+=20;
+  btn.classList.add('correct');
+  document.querySelectorAll('.game-left').forEach(b=>{
+   if(Number(b.dataset.id)===id){
+    b.classList.add('correct');
+    b.disabled=true;
+   }
+  });
+  btn.disabled=true;
+  document.getElementById('gameScore').textContent=gameScore;
+  document.getElementById('gameFeedback').textContent='🎉 Pasangan benar! '+gameItems[id-1].left+' cocok dengan '+gameItems[id-1].right+'.';
+  playTone('correct');
+
+  if(matchedPairs.length===5){
+   document.getElementById('gameFeedback').textContent='🏆 Sempurna! Semua pasangan berhasil dicocokkan. Skor 100.';
+   if(window.confetti)confetti({particleCount:120,spread:90});
+  }
+ }else{
+  btn.classList.add('wrong');
+  document.getElementById('gameFeedback').textContent='Belum tepat. Periksa kembali hubungan bagian dan fungsinya.';
+  playTone('wrong');
+  setTimeout(()=>btn.classList.remove('wrong'),800);
+ }
+ gameLeftSelected=null;
+}
+
+/* ==================================================
+   PAPAN REFLEKSI
+================================================== */
+
+const defaultReflections=[
+ {name:'Shaka',feeling:'😍 Sangat senang',message:'Saya jadi tahu bahwa prisma segitiga memiliki dua alas berbentuk segitiga yang sama dan tiga sisi tegak.',date:'Contoh refleksi'},
+ {name:'Haflasea',feeling:'🤔 Penasaran',message:'Saya ingin mencoba membuat jaring-jaring prisma dari kertas karton di rumah.',date:'Contoh refleksi'}
+];
+
+function getReflections(){
+ try{
+  return JSON.parse(localStorage.getItem('mathReflections')||'[]');
+ }catch(e){return []}
+}
+
+function saveLocalReflection(item){
+ const data=getReflections();
+ data.unshift(item);
+ localStorage.setItem('mathReflections',JSON.stringify(data.slice(0,50)));
+}
+
+function renderReflections(){
+ const all=[...defaultReflections,...getReflections()];
+ document.getElementById('reflectionBoard').innerHTML=all.map(item=>`
+ <div class="sticky">
+  <div class="flex justify-between gap-2">
+   <b class="text-indigo-800">${escapeHTML(item.name)}</b>
+   <span class="text-xs">${escapeHTML(item.feeling)}</span>
+  </div>
+  <p class="text-sm mt-3">${escapeHTML(item.message)}</p>
+  <div class="text-xs text-slate-500 mt-4">${escapeHTML(item.date||'')}</div>
+ </div>`).join('');
+}
+
+function escapeHTML(str){
+ return String(str).replace(/[&<>"']/g,c=>({
+ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+ })[c]);
+}
+
+document.getElementById('reflectionForm').addEventListener('submit',async function(e){
+ e.preventDefault();
+
+ const item={
+  name:document.getElementById('reflectionName').value.trim(),
+  feeling:document.getElementById('reflectionFeeling').value,
+  message:document.getElementById('reflectionMessage').value.trim(),
+  date:new Date().toLocaleString('id-ID')
+ };
+
+ if(!item.name||!item.message)return;
+
+ saveLocalReflection(item);
+ renderReflections();
+
+ const status=document.getElementById('reflectionStatus');
+
+ if(SHEET_WEB_APP_URL){
+  status.textContent='Menyimpan refleksi ke Google Spreadsheet...';
+  try{
+   await fetch(SHEET_WEB_APP_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(item)
+   });
+   status.textContent='✅ Refleksi ditambahkan ke papan. Pengiriman ke spreadsheet telah dilakukan.';
+  }catch(err){
+   status.textContent='Refleksi tersimpan secara lokal. Pengiriman ke spreadsheet gagal.';
+  }
+ }else{
+  status.textContent='✅ Refleksi tersimpan di browser ini. Hubungkan URL Google Apps Script untuk penyimpanan spreadsheet.';
+ }
+
+ this.reset();
+ playTone('correct');
+});
+
+document.addEventListener('DOMContentLoaded',()=>{
+ materialTab('prisma');
+ renderReflections();
+ initGame();
+});
+</script>
+</body>
+</html>
